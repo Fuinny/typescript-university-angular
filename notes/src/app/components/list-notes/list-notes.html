@@ -1,0 +1,14 @@
+<div class="card mt-3">
+  <div class="card-header">Saved notes</div>
+  <div class="card-body">
+    <div *ngFor="let note of noteList; let i=index;">
+      <div class="alert alert-info d-flex justify-content-between align-items-center">
+        <div>
+          <strong>{{ note[0] }}</strong>
+          <p class="mb-0">{{ note[1] }}</p>
+        </div>
+        <button class="btn btn-danger btn-sm ms-3" (click)="deleteNoteAt(i)">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
