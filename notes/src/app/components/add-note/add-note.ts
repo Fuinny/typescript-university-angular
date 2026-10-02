@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NoteService } from '../../services/note-service';
@@ -11,17 +12,14 @@ import { NoteService } from '../../services/note-service';
 export class AddNote {
   public noteTitle: string | null = null;
   public noteContent: string | null = null;
-  public noteList: [title: string, content: string][] = [];
 
-  public constructor(private noteService: NoteService) {
-    this.noteList = noteService.notes;
-  }
+  public constructor(private noteService: NoteService, private router: Router) { }
 
   public addNote() {
     if (this.noteTitle && this.noteContent) {
-      this.noteService.addNote(this.noteTitle, this.noteContent);
-      this.noteTitle = null;
-      this.noteContent = null;
+      this.noteService.addNote(this.noteTitle, this.noteContent).subscribe(() => {
+        this.router.navigate([""]);
+      });
     }
   }
 }

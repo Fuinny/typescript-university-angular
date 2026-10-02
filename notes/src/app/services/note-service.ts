@@ -1,28 +1,26 @@
-import { Service } from '@angular/core';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
-@Service()
+@Injectable({
+  providedIn: "root"
+})
 export class NoteService {
-  public notes: [title: string, content: string][] = [];
+  private url: string = "https://notes-a3c04-default-rtdb.europe-west1.firebasedatabase.app/notes";
 
-  public constructor() {
-    let tmp = localStorage.getItem("notes");
+  public constructor(private http: HttpClient) { }
 
-    if (tmp) {
-      this.notes = JSON.parse(tmp);
-    }
-  }
-
-  private save() {
-    localStorage.setItem("notes", JSON.stringify(this.notes));
+  public loadNotes() {
+    return this.http.get<{ [key: string]: { "title": string, "content": string } }>(this.url + ".json");
   }
 
   public addNote(title: string, content: string) {
-    this.notes.push([title, content]);
-    this.save();
+    return this.http.post(this.url + ".json", {
+      "title": title,
+      "content": content
+    });
   }
 
-  public deleteNoteAt(i: number) {
-    this.notes.splice(i, 1);
-    this.save();
+  public deleteNoteAt(id: string) {
+    return this.http.delete(this.url + "/" + id + ".json");
   }
 }

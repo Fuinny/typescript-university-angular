@@ -1,7 +1,8 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import { NoteService } from '../../services/note-service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Note } from '../../models/note';
 
 @Component({
   imports: [CommonModule, FormsModule],
@@ -11,13 +12,31 @@ import { CommonModule } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.Eager
 })
 export class ListNotes {
-  public noteList: [title: string, content: string][] = [];
+  public noteList = signal<Note[]>([]);
 
-  public constructor(private noteService: NoteService) {
-    this.noteList = noteService.notes;
+  private loadData() {
+    this.noteService.loadNotes().subscribe((data) => {
+      const tmp: Note[] = [];
+
+      for (let id in data) {
+        tmp.push({
+          id: id,
+          title: data[id].title,
+          content: data[id].content
+        })
+      }
+
+      this.noteList.set(tmp);
+    })
   }
 
-  public deleteNoteAt(i: number) {
-    this.noteService.deleteNoteAt(i);
+  public constructor(private noteService: NoteService) {
+    this.loadData();
+  }
+
+  public deleteNoteAt(id: string) {
+    this.noteService.deleteNoteAt(id).subscribe(() => {
+      this.loadData();
+    });
   }
 }

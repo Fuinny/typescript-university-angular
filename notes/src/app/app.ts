@@ -1,9 +1,8 @@
 import { Component, signal } from '@angular/core';
-import { AddNote } from './components/add-note/add-note';
-import { ListNotes } from './components/list-notes/list-notes';
+import { RouterOutlet, RouterLinkWithHref } from '@angular/router';
 
 @Component({
-  imports: [AddNote, ListNotes],
+  imports: [RouterOutlet, RouterLinkWithHref],
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',
