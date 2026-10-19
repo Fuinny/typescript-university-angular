@@ -1,6 +1,6 @@
 import { Router } from '@angular/router';
-import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Component, signal } from '@angular/core';
 import { NoteService } from '../../services/note-service';
 
 @Component({
@@ -10,6 +10,8 @@ import { NoteService } from '../../services/note-service';
   templateUrl: './add-note.html',
 })
 export class AddNote {
+  private isError = signal<boolean>(false);
+  private isLoading = signal<boolean>(false);
   public noteTitle: string | null = null;
   public noteContent: string | null = null;
 
@@ -17,8 +19,16 @@ export class AddNote {
 
   public addNote() {
     if (this.noteTitle && this.noteContent) {
-      this.noteService.addNote(this.noteTitle, this.noteContent).subscribe(() => {
-        this.router.navigate([""]);
+      this.isLoading.set(true);
+      this.noteService.addNote(this.noteTitle, this.noteContent).subscribe({
+        next: () => {
+          this.isLoading.set(false);
+          this.router.navigate([""]);
+        },
+        error: () => {
+          this.isLoading.set(false);
+          this.isError.set(true);
+        }
       });
     }
   }

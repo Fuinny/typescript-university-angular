@@ -1,0 +1,22 @@
+<div class="card mt-3">
+  <div class="card-header">
+    Edit note
+  </div>
+  <div class="card-body">
+    @if (isLoading()) {
+    <div class="alert alert-info mb-3">Loading...</div>
+    } @else if (isError()) {
+    <div class="alert alert-danger mb-3">Error!</div>
+    } @else {
+    <div class="mb-3">
+      <div class="mb-3">
+        <label>Title</label>
+        <input type="text" name="" id="" class="form-control" [value]="noteTitle()" #noteT>
+        <label>Content</label>
+        <input type="text" name="" id="" class="form-control" [value]="noteContent()" #noteC>
+      </div>
+      <button class="btn btn-primary" (click)="update(noteT, noteC)">Update</button>
+    </div>
+    }
+  </div>
+</div>

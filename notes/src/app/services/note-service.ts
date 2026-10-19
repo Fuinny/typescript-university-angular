@@ -13,8 +13,19 @@ export class NoteService {
     return this.http.get<{ [key: string]: { "title": string, "content": string } }>(this.url + ".json");
   }
 
+  public loadOneNote(id: string) {
+    return this.http.get<{ "title": string, "content": string }>(this.url + "/" + id + ".json")
+  }
+
   public addNote(title: string, content: string) {
     return this.http.post(this.url + ".json", {
+      "title": title,
+      "content": content
+    });
+  }
+
+  public updateNote(id: string, title: string, content: string) {
+    return this.http.put(this.url + "/" + id + ".json", {
       "title": title,
       "content": content
     });
