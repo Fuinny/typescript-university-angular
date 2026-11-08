@@ -1,0 +1,161 @@
+<div class="card mt-3">
+  <div class="card-header">Add new entry to the list</div>
+
+  <div class="card-body">
+    <div class="mb-3">Company information:</div>
+
+    <form [formGroup]="newClientForm" (ngSubmit)="sumbitForm()">
+
+      <div class="mb-3">
+        <label for="company_name" class="form-label">Company name</label>
+        <input id="company_name" formControlName="company_name" class="form-control"
+          [class.is-invalid]="newClientForm.get('company_name')?.invalid && newClientForm.get('company_name')?.touched"
+          placeholder="XYZ Corporation">
+
+        @if (newClientForm.get('company_name')?.touched) {
+        @if (newClientForm.get('company_name')?.hasError('required')) {
+        <div class="invalid-feedback">Company name is required.</div>
+        }
+        @if (newClientForm.get('company_name')?.hasError('minlength')) {
+        <div class="invalid-feedback">Company name must be at least 2 characters.</div>
+        }
+        @if (newClientForm.get('company_name')?.hasError('maxlength')) {
+        <div class="invalid-feedback">Company name cannot exceed 30 characters.</div>
+        }
+        }
+      </div>
+
+      <div class="mb-3">
+        <label for="company_code" class="form-label">Company code</label>
+        <input id="company_code" formControlName="company_code" class="form-control"
+          [class.is-invalid]="newClientForm.get('company_code')?.invalid && newClientForm.get('company_code')?.touched"
+          placeholder="12345">
+
+        @if (newClientForm.get('company_code')?.hasError('pattern') && newClientForm.get('company_code')?.touched) {
+        <div class="invalid-feedback">Company code must contain numbers only.</div>
+        }
+      </div>
+
+      <div class="mb-3">
+        <label for="vat_reg_number" class="form-label">VAT registration number</label>
+        <input id="vat_reg_number" formControlName="vat_reg_number" class="form-control"
+          [class.is-invalid]="newClientForm.get('vat_reg_number')?.invalid && newClientForm.get('vat_reg_number')?.touched"
+          placeholder="LT123456789">
+
+        @if (newClientForm.get('vat_reg_number')?.hasError('pattern') && newClientForm.get('vat_reg_number')?.touched) {
+        <div class="invalid-feedback">VAT number must contain numbers only or start with LT followed by numbers.</div>
+        }
+      </div>
+
+      <div class="mb-3">
+        <label for="address" class="form-label">Address</label>
+        <input id="address" formControlName="address" class="form-control"
+          [class.is-invalid]="newClientForm.get('address')?.invalid && newClientForm.get('address')?.touched"
+          placeholder="City, Street">
+
+        @if (newClientForm.get('address')?.invalid && newClientForm.get('address')?.touched) {
+        <div class="invalid-feedback">Please enter a valid address.</div>
+        }
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label">Email address</label>
+        <input id="email" formControlName="email" type="email" class="form-control"
+          [class.is-invalid]="newClientForm.get('email')?.invalid && newClientForm.get('email')?.touched"
+          placeholder="example@test.com">
+
+        @if (newClientForm.get('email')?.touched) {
+        @if (newClientForm.get('email')?.hasError('required')) {
+        <div class="invalid-feedback">Email address is required.</div>
+        }
+        @if (newClientForm.get('email')?.hasError('email')) {
+        <div class="invalid-feedback">Please enter a valid email address.</div>
+        }
+        }
+      </div>
+
+      <div class="mb-3">
+        <label for="telephone" class="form-label">Telephone</label>
+        <input id="telephone" formControlName="telephone" type="tel" class="form-control"
+          [class.is-invalid]="newClientForm.get('telephone')?.invalid && newClientForm.get('telephone')?.touched"
+          placeholder="+37065312345">
+
+        @if (newClientForm.get('telephone')?.touched) {
+        @if (newClientForm.get('telephone')?.hasError('minlength') ||
+        newClientForm.get('telephone')?.hasError('maxlength')) {
+        <div class="invalid-feedback">Telephone must be between 10 and 12 characters.</div>
+        }
+        @if (newClientForm.get('telephone')?.hasError('pattern')) {
+        <div class="invalid-feedback">Telephone must start with +370 and contain numbers only.</div>
+        }
+        }
+      </div>
+
+      <hr>
+      <div class="mb-3">Contacts:</div>
+
+      <div formArrayName="contacts">
+        @for (contact of contacts; track $index) {
+        <div [formGroupName]="$index" class="border rounded p-3 mb-3">
+
+          <div class="mb-3">
+            <label [for]="'first_name_' + $index" class="form-label">First name</label>
+            <input [id]="'first_name_' + $index" formControlName="first_name" class="form-control"
+              [class.is-invalid]="contact.get('first_name')?.invalid && contact.get('first_name')?.touched"
+              placeholder="John">
+
+            @if (contact.get('first_name')?.invalid && contact.get('first_name')?.touched) {
+            <div class="invalid-feedback">First name is required.</div>
+            }
+          </div>
+
+          <div class="mb-3">
+            <label [for]="'last_name_' + $index" class="form-label">Last name</label>
+            <input [id]="'last_name_' + $index" formControlName="last_name" class="form-control"
+              [class.is-invalid]="contact.get('last_name')?.invalid && contact.get('last_name')?.touched"
+              placeholder="Doe">
+
+            @if (contact.get('last_name')?.invalid && contact.get('last_name')?.touched) {
+            <div class="invalid-feedback">Last name is required.</div>
+            }
+          </div>
+
+          <div class="mb-3">
+            <label [for]="'position_' + $index" class="form-label">Position</label>
+            <input [id]="'position_' + $index" formControlName="position" class="form-control"
+              [class.is-invalid]="contact.get('position')?.invalid && contact.get('position')?.touched"
+              placeholder="Manager">
+
+            @if (contact.get('position')?.invalid && contact.get('position')?.touched) {
+            <div class="invalid-feedback">Please enter a position.</div>
+            }
+          </div>
+
+          <div class="mb-3">
+            <label [for]="'contact_telephone_' + $index" class="form-label">Contact telephone</label>
+            <input [id]="'contact_telephone_' + $index" formControlName="telephone" type="tel" class="form-control"
+              [class.is-invalid]="contact.get('telephone')?.invalid && contact.get('telephone')?.touched"
+              placeholder="+37065312345">
+
+            @if (contact.get('telephone')?.invalid && contact.get('telephone')?.touched) {
+            <div class="invalid-feedback">Please enter a valid contact telephone.</div>
+            }
+          </div>
+
+        </div>
+        }
+        <button class="btn btn-secondary" (click)="addContactField()">Add contact field</button>
+        <button class="btn btn-secondary ms-3" (click)="removeContactField()">Remove contact field</button>
+      </div>
+
+      <hr>
+
+      <div>
+        <button type="submit" class="btn btn-success" [disabled]="newClientForm.invalid">
+          Add new entry
+        </button>
+      </div>
+
+    </form>
+  </div>
+</div>
