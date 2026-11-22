@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { AuthService } from '../../../services/auth-service';
+import { Router } from '@angular/router';
 
 @Component({
   imports: [],
@@ -6,4 +8,10 @@ import { Component } from '@angular/core';
   styleUrl: './client-list.css',
   templateUrl: './client-list.html',
 })
-export class ClientList {}
+export class ClientList {
+  constructor(private authService: AuthService, private router: Router) {
+    if (!authService.isLoggedIn()) {
+      router.navigate(['login']);
+    }
+  }
+}
