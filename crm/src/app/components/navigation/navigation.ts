@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth-service';
 
 @Component({
   imports: [RouterLink],
@@ -7,4 +8,6 @@ import { RouterLink } from '@angular/router';
   styleUrl: './navigation.css',
   templateUrl: './navigation.html',
 })
-export class Navigation { }
+export class Navigation {
+  constructor(private authService: AuthService) { }
+}

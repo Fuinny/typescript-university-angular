@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Form, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ClientService } from '../../../services/client-service';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth-service';
 
 @Component({
   imports: [CommonModule, ReactiveFormsModule],
@@ -11,7 +14,11 @@ import { Form, FormArray, FormControl, FormGroup, ReactiveFormsModule, Validator
 export class ClientNew {
   public newClientForm: FormGroup;
 
-  constructor() {
+  constructor(private clientService: ClientService, private authService: AuthService, private router: Router) {
+    if (!this.authService.isLoggedIn()) {
+      this.router.navigate(['login']);
+    }
+
     this.newClientForm = new FormGroup({
       'company_name': new FormControl(null, [
         Validators.required,
@@ -40,8 +47,8 @@ export class ClientNew {
     });
   }
 
-  get contacts() {
-    return (this.newClientForm.get('contacts') as FormArray).controls;
+  get contacts(): FormGroup[] {
+    return (this.newClientForm.get('contacts') as FormArray).controls as FormGroup[];
   }
 
   private createContact(): FormGroup {
@@ -49,13 +56,18 @@ export class ClientNew {
       first_name: new FormControl(null, Validators.required),
       last_name: new FormControl(null, Validators.required),
       position: new FormControl(null, Validators.required),
-      telephone: new FormControl(null, Validators.required)
+      telephone: new FormControl(null, [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(12),
+        Validators.pattern(/^\+370[0-9]+$/)
+      ])
     });
   }
 
   public addContactField() {
     (this.newClientForm.get('contacts') as FormArray).push(
-      new FormControl(null, [], [])
+      this.createContact()
     );
   }
 
@@ -64,6 +76,8 @@ export class ClientNew {
   }
 
   public sumbitForm() {
-    console.log(this.newClientForm.value);
+    this.clientService.addClient(this.newClientForm.value).subscribe(() => {
+      this.router.navigate(["/"]);
+    });
   }
 }
